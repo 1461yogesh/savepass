@@ -2,8 +2,8 @@
 // ⚠️ IMPORTANT: Replace these with your actual Supabase credentials
 
 const SUPABASE_CONFIG = {
-  url: 'YOUR_SUPABASE_URL', // e.g., https://xxxxx.supabase.co
-  anonKey: 'YOUR_SUPABASE_ANON_KEY'
+  url: 'https://qasbpddsaaikwzlbwlrq.supabase.co', // e.g., https://xxxxx.supabase.co
+  anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFhc2JwZGRzYWFpa3d6bGJ3bHJxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzMTY2NTAsImV4cCI6MjA4ODg5MjY1MH0.AuCNN-avRYE0zNyO35NU9tZExOrF7cbb0ZzHV9iekFQ'
 };
 
 // Security Constants
