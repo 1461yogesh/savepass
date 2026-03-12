@@ -541,8 +541,7 @@ class DashboardController {
 }
 
 // Initialize dashboard when DOM is ready
-let dashboard;
 document.addEventListener('DOMContentLoaded', () => {
-  dashboard = new DashboardController();
-  dashboard.initialize();
+  window.dashboard = new DashboardController();
+  window.dashboard.initialize();
 });
