@@ -14,27 +14,28 @@ class DashboardController {
   // ============================================
 
   async initialize() {
-    // Check authentication
-    const session = await auth.initialize();
-    if (!session) {
-      window.location.href = 'login.html';
-      return;
-    }
-
-    // Check if vault is locked
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('locked') === 'true' || !encryption.isVaultUnlocked()) {
-      this.showUnlockModal();
-      return;
-    }
-
-    // Load and display data
-    await this.loadCredentials();
-    this.setupEventListeners();
-    this.setupInactivityTimer();
-    this.renderUserInfo();
+  // Check authentication
+  const session = await auth.initialize();
+  if (!session) {
+    window.location.href = 'login.html';
+    return;
   }
 
+  // ये तीनों लाइनें लॉक चेक से पहले आनी चाहिए!
+  this.setupEventListeners();
+  this.setupInactivityTimer();
+  this.renderUserInfo();
+
+  // Check if vault is locked
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('locked') === 'true' || !encryption.isVaultUnlocked()) {
+    this.showUnlockModal();
+    return;
+  }
+
+  // Load and display data
+  await this.loadCredentials();
+}
   // ============================================
   // CREDENTIAL MANAGEMENT
   // ============================================
