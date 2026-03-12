@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="SavePass Dashboard - Manage your encrypted credentials">
+  <title>Dashboard - SavePass</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/style.css">
+  
+  <!-- Supabase Client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="dashboard">
+  <!-- Header -->
+  <header class="dashboard-header">
+    <div class="header-content">
+      <div class="header-left">
+        <div class="header-logo">🔐 SavePass</div>
+        <div class="vault-status unlocked" id="vault-status">
+          <div class="status-indicator"></div>
+          <span>Vault Unlocked</span>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <button id="lock-vault-btn" class="btn-secondary btn-sm">
+          🔒 Lock Vault
+        </button>
+        
+        <div class="user-menu">
+          <div class="user-avatar" id="user-avatar">U</div>
+          <div style="display: none;" id="user-info">
+            <div style="font-weight: 600; font-size: 0.875rem;" id="user-name">User</div>
+            <div style="color: var(--text-dim); font-size: 0.75rem;" id="user-email"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="345159555d5874514c55594458511a575b59">[email&#160;protected]</a></div>
+          </div>
+          <button id="sign-out-btn" class="btn-secondary btn-sm">
+            Sign Out
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="dashboard-main">
+    <!-- Stats -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-value" id="stat-total">0</div>
+        <div class="stat-label">Total Credentials</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="stat-websites">0</div>
+        <div class="stat-label">Websites</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="stat-apps">0</div>
+        <div class="stat-label">Apps</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="stat-banking">0</div>
+        <div class="stat-label">Banking</div>
+      </div>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="toolbar">
+      <div class="search-bar">
+        <input 
+          type="text" 
+          id="search-input" 
+          placeholder="Search credentials..."
+          autocomplete="off"
+        >
+      </div>
+
+      <div class="filters">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="favorites">⭐ Favorites</button>
+        <button class="filter-btn" data-filter="website">🌐 Websites</button>
+        <button class="filter-btn" data-filter="app">📱 Apps</button>
+        <button class="filter-btn" data-filter="banking">🏦 Banking</button>
+      </div>
+
+      <button id="add-credential-btn" class="btn btn-primary">
+        ➕ Add Credential
+      </button>
+    </div>
+
+    <!-- Credentials List -->
+    <div id="credentials-list" class="credentials-grid">
+      <!-- Credentials will be rendered here by JavaScript -->
+      <div class="empty-state">
+        <div class="empty-state-icon">🔐</div>
+        <h3>Loading your vault...</h3>
+      </div>
+    </div>
+  </main>
+
+  <!-- Unlock Modal -->
+  <div id="unlock-modal" class="modal-overlay hidden">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>🔒 Unlock Your Vault</h2>
+        <p style="color: var(--text-secondary);">Enter your master passphrase to access your credentials</p>
+      </div>
+
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">Master Passphrase</label>
+          <input 
+            type="password" 
+            id="unlock-passphrase" 
+            class="form-input"
+            placeholder="Enter your master passphrase"
+            autocomplete="off"
+          >
+          <p id="unlock-hint" style="margin-top: 0.5rem; font-size: 0.875rem; color: var(--text-dim);"></p>
+        </div>
+
+        <div id="unlock-error" class="hidden" style="color: var(--danger); font-size: 0.875rem; margin-top: 0.5rem;">
+          Incorrect passphrase. Please try again.
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button id="unlock-btn" class="btn btn-primary">Unlock Vault</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Setup Master Passphrase Modal -->
+  <div id="setup-modal" class="modal-overlay hidden">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>🛡️ Setup Master Passphrase</h2>
+        <p style="color: var(--text-secondary);">
+          Create a strong master passphrase to encrypt your vault. 
+          <strong style="color: var(--warning);">You cannot recover this if forgotten!</strong>
+        </p>
+      </div>
+
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">Master Passphrase</label>
+          <input 
+            type="password" 
+            id="setup-passphrase" 
+            class="form-input"
+            placeholder="Create a strong passphrase"
+            autocomplete="new-password"
+          >
+          <div class="password-strength">
+            <div class="strength-bar">
+              <div id="strength-fill" class="strength-fill weak"></div>
+            </div>
+            <div class="strength-label" id="strength-label">Weak password</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Confirm Passphrase</label>
+          <input 
+            type="password" 
+            id="setup-passphrase-confirm" 
+            class="form-input"
+            placeholder="Re-enter your passphrase"
+            autocomplete="new-password"
+          >
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Hint (Optional)</label>
+          <input 
+            type="text" 
+            id="setup-hint" 
+            class="form-input"
+            placeholder="A hint to help you remember (not the passphrase itself)"
+          >
+          <p style="margin-top: 0.5rem; font-size: 0.75rem; color: var(--text-dim);">
+            This hint will be visible, so don't make it too obvious!
+          </p>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button id="setup-btn" class="btn btn-primary">Create Vault</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add/Edit Credential Modal -->
+  <div id="credential-modal" class="modal-overlay hidden">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="credential-modal-title">➕ Add Credential</h2>
+      </div>
+
+      <div class="modal-body">
+        <form id="credential-form">
+          <input type="hidden" id="credential-id">
+
+          <div class="form-group">
+            <label class="form-label">Title *</label>
+            <input 
+              type="text" 
+              id="credential-title" 
+              class="form-input"
+              placeholder="e.g., Gmail, Facebook, Bank Account"
+              required
+            >
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Category *</label>
+            <select id="credential-category" class="form-select" required>
+              <option value="website">🌐 Website</option>
+              <option value="app">📱 App</option>
+              <option value="wifi">📶 Wi-Fi</option>
+              <option value="api">🔑 API Key</option>
+              <option value="note">📝 Secure Note</option>
+              <option value="banking">🏦 Banking</option>
+              <option value="other">📦 Other</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Username / Email</label>
+            <input 
+              type="text" 
+              id="credential-username" 
+              class="form-input"
+              placeholder="username or email"
+              autocomplete="off"
+            >
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Password *</label>
+            <div style="display: flex; gap: 0.5rem;">
+              <input 
+                type="password" 
+                id="credential-password" 
+                class="form-input"
+                placeholder="Enter password"
+                required
+                autocomplete="new-password"
+                style="flex: 1;"
+              >
+              <button type="button" id="generate-password-btn" class="btn-secondary">
+                Generate
+              </button>
+              <button type="button" id="toggle-credential-password-btn" class="btn-icon" style="padding: 0.5rem 1rem;">
+                👁️
+              </button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">URL</label>
+            <input 
+              type="url" 
+              id="credential-url" 
+              class="form-input"
+              placeholder="https://example.com"
+            >
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Notes</label>
+            <textarea 
+              id="credential-notes" 
+              class="form-textarea"
+              placeholder="Additional information..."
+            ></textarea>
+          </div>
+
+          <div class="form-group">
+            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+              <input type="checkbox" id="credential-favorite">
+              <span>⭐ Add to favorites</span>
+            </label>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" id="cancel-credential-btn" class="btn btn-secondary">Cancel</button>
+        <button type="submit" form="credential-form" id="save-credential-btn" class="btn btn-primary">
+          Save Credential
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="js/config.js"></script>
+  <script src="js/supabase.js"></script>
+  <scrip

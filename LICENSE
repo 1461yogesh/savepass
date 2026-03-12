@@ -1,0 +1,80 @@
+MIT License
+
+Copyright (c) 2024 SavePass
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+---
+
+ADDITIONAL TERMS FOR PASSWORD MANAGER SOFTWARE
+
+This software is designed to store and manage sensitive credential information.
+By using this software, you acknowledge and agree that:
+
+1. SECURITY RESPONSIBILITY
+   You are solely responsible for:
+   - Choosing a strong master passphrase
+   - Maintaining the security of your master passphrase
+   - Securing the devices on which you use this software
+   - Understanding and accepting the zero-knowledge model
+
+2. NO WARRANTY FOR DATA SECURITY
+   While this software implements industry-standard encryption and security
+   practices, no system is 100% secure. The authors and contributors make no
+   warranties regarding the security, reliability, or fitness for purpose of
+   this software.
+
+3. NO RECOVERY MECHANISM
+   Due to the zero-knowledge architecture, if you lose your master passphrase,
+   your data CANNOT be recovered. This is by design to ensure maximum security.
+   The authors and contributors are not responsible for lost data due to
+   forgotten passphrases.
+
+4. THIRD-PARTY SERVICES
+   This software integrates with third-party services (Supabase, Google OAuth).
+   The authors and contributors are not responsible for:
+   - Security breaches of third-party services
+   - Changes to third-party service terms or availability
+   - Costs associated with third-party services
+
+5. USE AT YOUR OWN RISK
+   You use this software entirely at your own risk. The authors and contributors
+   shall not be liable for any damages arising from the use, misuse, or inability
+   to use this software, including but not limited to:
+   - Data loss
+   - Security breaches
+   - Identity theft
+   - Financial losses
+   - Any other damages, direct or indirect
+
+6. PRODUCTION USE
+   While this software is designed to production standards, it is provided as-is.
+   Before using in production:
+   - Perform thorough security testing
+   - Implement additional security measures as needed
+   - Maintain regular backups
+   - Have an incident response plan
+
+7. COMPLIANCE
+   You are responsible for ensuring your use of this software complies with
+   all applicable laws and regulations in your jurisdiction, including but not
+   limited to data protection and privacy laws.
+
+BY USING THIS SOFTWARE, YOU ACKNOWLEDGE THAT YOU HAVE READ AND UNDERSTOOD
+THESE TERMS AND ACCEPT FULL RESPONSIBILITY FOR YOUR USE OF THE SOFTWARE.
